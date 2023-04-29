@@ -4,46 +4,41 @@ const timerEl = document.querySelector('span');
 
 // Напишите реализацию createTimerAnimator
 // который будет анимировать timerEl
-function createTimerAnimator() {
-  if (seconds >= 0) {
-    --seconds
-    if (minute >= 0 && seconds < 0) {
-      seconds = 59;
-      minute -= 1;
-    }
+const createTimerAnimator = () => {
+  let timeInterval;
 
-    if (hours >= 0 && minute < 0) {
-      minute = 59;
-      hours -= 1;
-    }
-  }
-  timerEl.textContent = zeroPadding(hours, 2) + ':' + zeroPadding(minute, 2) + ':' + zeroPadding(seconds, 2);
+  return (seconds) => {
+    clearInterval(timeInterval);
 
+    const startTime = Date.now();
+    const endTime = startTime + (seconds * 1000);
+
+    timeInterval = setInterval(() => {
+      const remainingTime = Math.round((endTime - Date.now()) / 1000);
+
+      if (remainingTime >= 0) {
+        const hours = Math.floor(remainingTime / 3600);
+        const minutes = Math.floor((remainingTime % 3600) / 60);
+        const seconds = remainingTime % 60;
+        timerEl.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      } else {
+        clearInterval(timeInterval);
+        timerEl.textContent = '00:00:00';
+      }
+    }, 1000);
+  };
 };
 
-let hours = 1
-let minute = 1
-let seconds = 2
-let timer
+const animateTimer = createTimerAnimator();
+
+inputEl.addEventListener('input', () => {
+  // Очистите input так, чтобы в значении
+  // оставались только числа
+  inputEl.value = inputEl.value.replace(/\D/g, '')
+});
 
 buttonEl.addEventListener('click', () => {
-  clearInterval(timer)
-  const inputEl = document.querySelector('input').value
-  hours = Math.floor(inputEl / 60 / 60)
-  minute = Math.floor(inputEl / 60) - (hours * 60)
-  seconds = inputEl % 60
-  timer = setInterval(createTimerAnimator, 1000)
-})
-
-
-createTimerAnimator()
-
-
-
-function zeroPadding(num, digit) {
-  var zero = '';
-  for (var i = 0; i < digit; i++) {
-    zero += '0';
-  }
-  return (zero + num).slice(-digit);
-}
+  const seconds = Number(inputEl.value);
+  animateTimer(seconds);
+  inputEl.value = '';
+});

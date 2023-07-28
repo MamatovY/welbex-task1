@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Фото</title>
+
+
+
+</head>
+
+<body>
+  <script>
+
+    const test = (start, end) => {
+      let count = 0;
+
+      for (let i = start; i <= end; i++) {
+        if (i.toString().indexOf('5') === -1) {
+          count++;
+          console.log(i);
+        } else {
+          console.log('a');
+        }
+
+      }
+
+      return count;
+    }
+    console.log(test(4, 17));
+  </script>
+</body>
+
+</html>

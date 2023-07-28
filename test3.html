@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Фото</title>
+
+
+  <style>
+    .main-image {
+      text-align: center;
+    }
+
+    .main-image img {
+      width: 440px;
+      min-height: 200px;
+      margin-bottom: 20px;
+    }
+
+    .small-image {
+      display: grid;
+      grid-template-columns: auto auto auto;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .small-image img {
+      width: 200px;
+      min-height: 50px;
+      height: 150px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="main-image"></div>
+  <div class="small-image"></div>
+  <input type="file" id="image-input" multiple accept="image/*">
+  <script>
+    const input = document.getElementById('image-input');
+    const mainImage = document.querySelector('.main-image');
+    const smallImage = document.querySelector('.small-image');
+    let selectedImage = null;
+
+    input.addEventListener('change', handleFileSelect);
+
+
+    function handleFileSelect(event) {
+      // Очищаем предыдущие фотографии
+      mainImage.innerHTML = '';
+      smallImage.innerHTML = '';
+
+      const files = event.target.files;
+      const firstFile = files[0];
+      const otherFiles = Array.from(files).slice(1);
+
+      // Показать первый файл как главное изображение
+      showImagePreview(firstFile, true);
+
+      // Показать остальные файлы как маленькие изображения
+      otherFiles.forEach(file => showImagePreview(file, false));
+    }
+
+    function showImagePreview(file, isMain) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const image = document.createElement('img');
+        image.src = event.target.result;
+
+        if (isMain) {
+          mainImage.appendChild(image);
+        } else {
+          smallImage.appendChild(image);
+        }
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+
+  </script>
+</body>
+
+</html>

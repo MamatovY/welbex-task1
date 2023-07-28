@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Фото</title>
+
+
+  <style>
+    .small-image {
+      display: grid;
+      grid-template-columns: auto auto auto;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .small-image img {
+      width: 200px;
+      min-height: 50px;
+      height: 150px;
+      object-fit: cover;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <td valign="top">
+    <form action="include/moder_add_do.php" method="post" onsubmit="return SendForm();" id="forma">
+      <table align="center">
+        <tbody>
+          <tr>
+            <td colspan="2"><span class="my_subject"><!--Модераторы-->Модераторлор</span></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+            </td>
+          </tr>
+          <tr>
+            <td><!--ФИО-->Аты-жөнү</td>
+            <td><input type="text" name="name_m"></td>
+          </tr>
+          <tr>
+            <td><b style="color: red;">*</b> <!--Логин-->Логин</td>
+            <td><input type="text" name="login_m"></td>
+          </tr>
+          <tr>
+            <td><b style="color: red;">*</b> <!--Пароль-->Сырсөз</td>
+            <td><input type="text" id='password_m' name="password_m"> <a href="#" id="pass_start">Сырсөздү түзүү<!--Сгенерировать пароль--></a>&nbsp; <span id="result"></span></td>
+          </tr>
+          <tr>
+            <td><b style="color: red;">*</b> <!--Доступ-->Мүмкүнчүлүк</td>
+            <td><label><input type="checkbox" name="d_conta"> <!--Контакты-->Контактылар</label>&nbsp;<label><input type="checkbox" name="d_doc"> <!--Документы-->Документтер</label>
+              &nbsp;<label><input type="checkbox" name="d_news"> <!--Новости-->Жаңылыктар</label>&nbsp;<br><label><input type="checkbox" name="d_sotru">
+                <!--Сотрудники-->Кызматкерлер</label>&nbsp;<label><input type="checkbox" name="d_page"> <!--Страницы-->Барактар</label>
+              &nbsp;<label><input type="checkbox" name="d_opros"> <!--Опросы-->Сурамжылоолор</label></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <div style="display: none;">
+                <p><!--Какие символы включать в пароль-->Сырсөзгө кандай белгилерди киргизүү керек:</p>
+                <ul class="password__generate">
+                  <li><input id="arr_num" type="checkbox" checked="checked"> <!--Цифры-->Цифра</li>
+                  <li><input id="arr_en" type="checkbox" checked="checked"> <!--Английский строчные буквы-->Англисче кичине тамгалар</li>
+                  <li><input id="arr_EN" type="checkbox" checked="checked"> <!--Английский заглавные буквы-->Англисче баш тамгалар</li>
+                  <li><input id="arr_symb" type="checkbox" checked="checked"> <!--Спецсимволы-->Өзгөчө символдор</li>
+                </ul>
+                <p><!--Количество символов в пароле-->Сырсөздөгү символдордун саны: <input id="passLenght" type="number" step="1" min="4" max="20" value="7"></p>
+              </div>&nbsp;
+            </td>
+          </tr>
+          <tr>
+            <td><b style="color: red;">*</b> Башкаруу панелинин тили</td>
+            <td><select name="control_panel_language">
+                <option value="ky">Кыргызча</option>
+                <option value="ru">Русский</option>
+                <option value="en">English</option>
+              </select></td>
+          </tr>
+          <tr>
+            <td colspan="2"><input type="submit" value="Сакта"></td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+
+    <script language="JavaScript">
+      required = new Array("adres", "telef", "vash");
+      required_show = new Array("Дарек", "Телефон", "E-mail");
+      function SendForm() {
+        var i, j;
+        for (j = 0; j < required.length; j++) {
+          for (i = 0; i < document.forms['forma'].length; i++) {
+            if (document.forms['forma'].elements[i].name == required[j] && document.forms['forma'].elements[i].value == "") {
+              alert('Сураныч, киргизиңиз ' + required_show[j]);
+              document.forms['forma'].elements[i].focus();
+              return false;
+            }
+          }
+        }
+        return true;
+      }
+
+
+
+      let arr_num = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      let arr_en = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+      let arr_EN = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+      let arr_symb = ['!', '@', '#', '$', '%', '?', '-', '+', '=', '~'];
+
+      const compareRandom = () => Math.random() - 0.5;
+
+      const randomInteger = (min, max) => Math.round(min - 0.5 + Math.random() * (max - min + 1));
+
+      function generatePassword() {
+        let arr = [];
+        if (document.querySelector('#arr_num').checked) arr = arr.concat(arr_num);
+        if (document.querySelector('#arr_en').checked) arr = arr.concat(arr_en);
+        if (document.querySelector('#arr_EN').checked) arr = arr.concat(arr_EN);
+        if (document.querySelector('#arr_symb').checked) arr = arr.concat(arr_symb);
+
+        arr.sort(compareRandom);
+
+        let password = '';
+        let passLenght = document.querySelector('#passLenght').value;
+
+        for (let i = 0; i < passLenght; i++) {
+          password += arr[randomInteger(0, arr.length - 1)];
+        }
+
+        document.querySelector('#password_m').value = password;
+        document.querySelector('#result').textContent = password;
+      }
+
+      document.querySelector('#pass_start').addEventListener('click', generatePassword);   
+    </script>
+  </td>
+</body>
+
+</html>
